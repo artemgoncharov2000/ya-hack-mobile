@@ -1,17 +1,26 @@
 import React, {useState} from 'react';
-import {ScrollView, SliderComponent, View} from "react-native";
+import {SafeAreaView, ScrollView, SliderComponent, View} from "react-native";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import {PlayerStyles} from "./Player.styles";
-import PlayButton from "../../components/PlayButton/PlayButton";
+import Header from "./Header/Header";
+import InteractiveArea from "./InteractiveArea/InteractiveArea";
+import SongInfo from "./SongInfo/SongInfo";
+import Controls from "./Controls/Controls";
+import Footer from "./Footer/Footer";
 
 const Player: React.FC = () => {
 
   return (
-    <View style={PlayerStyles.Player}>
-      <MultiSlider
+    <SafeAreaView style={PlayerStyles.Player}>
+      <Header title={"Sebrant Chatting"}/>
+      <InteractiveArea/>
+      <SongInfo
+        title={'Очередной подкаст Себранта'}
+        subtitle={'Sebrant Chatting'}
       />
-      <PlayButton/>
-    </View>
+      <Controls/>
+      <Footer/>
+    </SafeAreaView>
   )
 }
 
