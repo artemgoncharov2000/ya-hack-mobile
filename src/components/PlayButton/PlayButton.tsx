@@ -1,9 +1,8 @@
 import React, {useState} from "react";
 import { View } from "react-native";
 import {TouchableOpacity} from "react-native";
-// @ts-ignore
 import PlayIcon from '../../icons/play-button-icon.svg';
-import PauseIcon from '../../icons/play-button-icon.svg';
+import PauseIcon from '../../icons/pause-button-icon.svg';
 
 const PlayButton: React.FC = () => {
 
@@ -16,13 +15,13 @@ const PlayButton: React.FC = () => {
   return (
     <View>
       <TouchableOpacity  onPress={handleTouch}>
-        {/*{*/}
-        {/*  isPlaying*/}
-        {/*    ?*/}
-            <PauseIcon height={64} width={64} />
-        {/*    :*/}
-        {/*    <PlayIcon />*/}
-        {/*}*/}
+        {
+          isPlaying
+            ?
+            <PauseIcon />
+            :
+            <PlayIcon />
+        }
       </TouchableOpacity>
     </View>
 
