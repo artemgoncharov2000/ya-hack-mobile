@@ -17,13 +17,14 @@ const PlayButton: React.FC<PropsT> = ({
   const [isPlaying, setIsPlaying] = useState(false);
 
   const handlePress = () => {
-    if (isPlaying) {
-      setIsPlaying(!isPlaying)
-      onPressStop();
-    } else {
-      setIsPlaying(!isPlaying)
-      onPressPlay();
-    }
+    // if (isPlaying) {
+    //   setIsPlaying(!isPlaying)
+    //   onPressStop();
+    // } else {
+    //   setIsPlaying(!isPlaying)
+    //   onPressPlay();
+    // }
+    onPressPlay();
   }
 
   return (

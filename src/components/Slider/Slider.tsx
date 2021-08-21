@@ -30,6 +30,7 @@ const Slider: React.FC<PropsT> = ({
         selectedStyle={styles.selected}
         sliderLength={365}
         containerStyle={styles.sliderContainer}
+
       />
       <View style={styles.timeStatusContainer}>
         <Text style={styles.timeText}>{getTime(currentPos)}</Text>

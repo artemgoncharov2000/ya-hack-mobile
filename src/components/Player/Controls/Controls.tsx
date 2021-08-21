@@ -1,73 +1,155 @@
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import React, {useState} from 'react';
-import {View, Text} from "react-native";
+import {View, Text, Button, ActivityIndicator} from "react-native";
 import {ControlsStyles as styles} from "./Controls.styles";
 import PlayButton from "../../PlayButton/PlayButton";
-import Slider from "../../Slider/Slider";
+// import Slider from "../../Slider/Slider";
 import RewindButton from "../../RewindButton/RewindButton";
 import {Audio, AVPlaybackStatus} from 'expo-av';
 import { Sound } from 'expo-av/build/Audio/Sound';
+import Slider from '@react-native-community/slider';
 
-const Controls: React.FC = () => {
+const uri =  "file:///Users/artemgoncharov/Library/Developer/CoreSimulator/Devices/586D35AB-0332-42CE-B75E-287E6B5AC19E/data/Containers/Data/Application/99DD4F57-C1AE-4196-B18C-EB65376CCD03/Library/Caches/ExponentExperienceData/%2540artemgoncharov2000%252FYaHackMobile/ExponentAsset-a8498bd8aa4b8070ad0a07977277cafc.mp3"
 
-  const sound = new Audio.Sound();
-  const [status, setStatus] = useState<AVPlaybackStatus>();
+const Controls = () => {
+  const [Loaded, SetLoaded] = React.useState(false);
+  const [Loading, SetLoading] = React.useState(false);
+  const [Playing, SetPlaying] = React.useState(false);
+  const [Duration, SetDuration] = React.useState(0);
+  const [Value, SetValue] = React.useState(0);
+  const sound = React.useRef(new Audio.Sound());
 
-  const loadSound = async () => {
-    // Audio.Sound.createAsync(
-    //   require('./test.mp3'),
-    // )
-    //   .then(({sound}) => setSound(sound))
+  const UpdateStatus = async (data) => {
     try {
-      await sound.loadAsync(require('./test.mp3'));
-      const status = await sound.getStatusAsync();
-      setStatus(status);
+      if (data.didJustFinish) {
+        ResetPlayer();
+      } else if (data.positionMillis) {
+        if (data.durationMillis) {
+          SetValue((data.positionMillis / data.durationMillis) * 100);
+        }
+      }
     } catch (error) {
-      console.log(error)
+      console.log('Error');
     }
-  }
+  };
 
-  const playSound = async () => {
-
-    if (!sound) {
-      return;
+  const ResetPlayer = async () => {
+    try {
+      const checkLoading = await sound.current.getStatusAsync();
+      if (checkLoading.isLoaded) {
+        SetValue(0);
+        SetPlaying(false);
+        await sound.current.setPositionAsync(0);
+        await sound.current.stopAsync();
+      }
+    } catch (error) {
+      console.log('Error');
     }
+  };
 
-    const status = await sound.getStatusAsync()
-    console.log(status);
-    await sound.playAsync();
-  }
-
-  const stopSound = async () => {
-
-    if (!sound) {
-      return;
+  const PlayAudio = async () => {
+    try {
+      const result = await sound.current.getStatusAsync();
+      if (result.isLoaded) {
+        if (!result.isPlaying) {
+          sound.current.playAsync();
+          SetPlaying(true);
+        }
+      }
+    } catch (error) {
+      SetPlaying(false);
     }
+  };
 
-    await sound.stopAsync();
-  }
+  const PauseAudio = async () => {
+    try {
+      const result = await sound.current.getStatusAsync();
+      if (result.isLoaded) {
+        if (result.isPlaying) {
+          sound.current.pauseAsync();
+          SetPlaying(false);
+        }
+      }
+    } catch (error) {
+      SetPlaying(true);
+    }
+  };
 
-  React.useEffect(() => {
-    loadSound();
-    return sound
-      ? () => {
-        sound.unloadAsync(); }
-      : undefined;
-  }, [sound, loadSound]);
+  const SeekUpdate = async (data) => {
+    try {
 
-  return (
-    <View style={styles.container}>
-      <Slider currentPos={status.positionMillis} duration={status.durationMillis}/>
-      <View style={styles.buttonsContainer}>
-        <RewindButton isForward={false}/>
-        <PlayButton
-          onPressPlay={playSound}
-          onPressStop={stopSound}
+      const checkLoading = await sound.current.getStatusAsync();
+      if (checkLoading.isLoaded) {
+        const result = (data / 100) * Duration;
+        await sound.current.setPositionAsync(Math.round(result));
+      }
+    } catch (error) {
+      console.log('Error');
+    }
+  };
+
+  const LoadAudio = async () => {
+    SetLoading(true);
+    const checkLoading = await sound.current.getStatusAsync();
+    if (!checkLoading.isLoaded) {
+      try {
+        const result = await sound.current.loadAsync(
+          require('./test.mp3'),
+          {},
+          true
+        );
+        if (!result.isLoaded) {
+          SetLoading(false);
+          SetLoaded(false);
+          console.log('Error in Loading Audio');
+        } else {
+          sound.current.setOnPlaybackStatusUpdate(UpdateStatus);
+          SetLoading(false);
+          SetLoaded(true);
+          SetDuration(result.durationMillis);
+        }
+      } catch (error) {
+        SetLoading(false);
+        SetLoaded(false);
+      }
+    } else {
+      SetLoading(false);
+      SetLoaded(true);
+    }
+  };
+
+    return (
+      <View style={styles.container}>
+        {/*<Slider currentPos={Value} duration={Duration}/>*/}
+        <Slider
+          style={{ width: 365 }}
+          minimumValue={0}
+          maximumValue={100}
+          value={Value}
+          onValueChange={(value) => {console.log(value)}}
+          onSlidingComplete={(data) => SeekUpdate(data)}
+          minimumTrackTintColor={'dodgerblue'}
         />
-        <RewindButton isForward={true}/>
+        <View style={styles.buttonsContainer}>
+          <RewindButton isForward={false}/>
+          {/*<PlayButton*/}
+          {/*  onPressPlay={playSound}*/}
+          {/*  onPressStop={stopSound}*/}
+          {/*/>*/}
+          {Loading ? (
+            <ActivityIndicator size={"small"} color={"red"}/>
+          )
+          : !Loaded ?
+              <Button title={"Load"} onPress={LoadAudio}/>
+              :
+              <Button title={"Play"} onPress={Playing ? PauseAudio : PlayAudio}/>
+          }
+
+          <RewindButton isForward={true}/>
+        </View>
       </View>
-    </View>
-  );
+    );
+
 }
 
 export default Controls;
