@@ -5,6 +5,6 @@ export const PlayerStyles = StyleSheet.create({
     flex: 1,
     // justifyContent: "center",
     // alignItems: "center",
-    backgroundColor: 'rgb(46, 46, 46)',
+    backgroundColor: '#493673',
   }
 })
