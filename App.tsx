@@ -8,12 +8,3 @@ export default function App() {
     <Player/>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#493673',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
