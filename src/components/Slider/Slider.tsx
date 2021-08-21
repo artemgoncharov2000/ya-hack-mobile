@@ -3,7 +3,15 @@ import {View, Text} from "react-native";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import {SliderStyles as styles} from "./Slider.styles";
 
-const Slider: React.FC = () => {
+type PropsT = {
+  currentPos: number,
+  duration: number,
+}
+
+const Slider: React.FC<PropsT> = ({
+  currentPos,
+  duration,
+}) => {
 
 
   return (
@@ -19,8 +27,8 @@ const Slider: React.FC = () => {
         containerStyle={styles.sliderContainer}
       />
       <View style={styles.timeStatusContainer}>
-        <Text style={styles.timeText}>{"00:00"}</Text>
-        <Text style={styles.timeText}>{"14:15"}</Text>
+        <Text style={styles.timeText}>{currentPos}</Text>
+        <Text style={styles.timeText}>{duration}</Text>
       </View>
     </View>
 
