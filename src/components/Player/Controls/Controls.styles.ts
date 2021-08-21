@@ -5,7 +5,6 @@ export const ControlsStyles = StyleSheet.create({
     flex: 3,
     // justifyContent: "center",
     // alignItems: "center",
-    backgroundColor: '#493673',
     alignItems: 'center',
     paddingVertical: 20,
   },
