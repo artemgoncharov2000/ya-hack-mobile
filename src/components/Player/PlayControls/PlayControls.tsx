@@ -11,7 +11,7 @@ import Slider from '@react-native-community/slider';
 
 const uri =  "file:///Users/artemgoncharov/Library/Developer/CoreSimulator/Devices/586D35AB-0332-42CE-B75E-287E6B5AC19E/data/Containers/Data/Application/99DD4F57-C1AE-4196-B18C-EB65376CCD03/Library/Caches/ExponentExperienceData/%2540artemgoncharov2000%252FYaHackMobile/ExponentAsset-a8498bd8aa4b8070ad0a07977277cafc.mp3"
 
-const Controls = () => {
+const PlayControls = () => {
   const [Loaded, SetLoaded] = React.useState(false);
   const [Loading, SetLoading] = React.useState(false);
   const [Playing, SetPlaying] = React.useState(false);
@@ -152,4 +152,4 @@ const Controls = () => {
 
 }
 
-export default Controls;
+export default PlayControls;

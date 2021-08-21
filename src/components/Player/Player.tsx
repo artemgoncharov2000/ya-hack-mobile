@@ -5,7 +5,7 @@ import {PlayerStyles} from "./Player.styles";
 import Header from "./Header/Header";
 import InteractiveArea from "./InteractiveArea/InteractiveArea";
 import SongInfo from "./SongInfo/SongInfo";
-import Controls from "./Controls/Controls";
+import PlayControls from "./PlayControls/PlayControls";
 import Footer from "./Footer/Footer";
 
 const Player: React.FC = () => {
@@ -18,7 +18,7 @@ const Player: React.FC = () => {
         title={'Очередной подкаст Себранта'}
         subtitle={'Sebrant Chatting'}
       />
-      <Controls/>
+      <PlayControls/>
       <Footer/>
     </SafeAreaView>
   )
