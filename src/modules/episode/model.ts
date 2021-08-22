@@ -19,7 +19,7 @@ export type EpisodeItemT = {
   imageUrl?: string,
 };
 
-export type EpisodeT = {
+export type EpisodeStateT = {
   podcastId: string,
   guid: string,
   episodeNumber: number,
