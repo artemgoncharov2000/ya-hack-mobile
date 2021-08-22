@@ -1,0 +1,1 @@
+type WrapGeneratorT<R> = Generator<any, R, any>;
