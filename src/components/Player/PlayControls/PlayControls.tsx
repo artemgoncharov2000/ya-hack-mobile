@@ -12,11 +12,11 @@ import Slider from '@react-native-community/slider';
 const uri =  "file:///Users/artemgoncharov/Library/Developer/CoreSimulator/Devices/586D35AB-0332-42CE-B75E-287E6B5AC19E/data/Containers/Data/Application/99DD4F57-C1AE-4196-B18C-EB65376CCD03/Library/Caches/ExponentExperienceData/%2540artemgoncharov2000%252FYaHackMobile/ExponentAsset-a8498bd8aa4b8070ad0a07977277cafc.mp3"
 
 const PlayControls = () => {
-  const [Loaded, SetLoaded] = React.useState(false);
-  const [Loading, SetLoading] = React.useState(false);
-  const [Playing, SetPlaying] = React.useState(false);
-  const [Duration, SetDuration] = React.useState(0);
-  const [Value, SetValue] = React.useState(0);
+  const [loaded, setLoaded] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const [playing, setPlaying] = React.useState(false);
+  const [duration, setDuration] = React.useState(0);
+  const [value, setValue] = React.useState(0);
   const sound = React.useRef(new Audio.Sound());
 
   const UpdateStatus = async (data) => {
@@ -25,7 +25,7 @@ const PlayControls = () => {
         ResetPlayer();
       } else if (data.positionMillis) {
         if (data.durationMillis) {
-          SetValue((data.positionMillis / data.durationMillis) * 100);
+          setValue((data.positionMillis / data.durationMillis) * 100);
         }
       }
     } catch (error) {
@@ -37,8 +37,8 @@ const PlayControls = () => {
     try {
       const checkLoading = await sound.current.getStatusAsync();
       if (checkLoading.isLoaded) {
-        SetValue(0);
-        SetPlaying(false);
+        setValue(0);
+        setPlaying(false);
         await sound.current.setPositionAsync(0);
         await sound.current.stopAsync();
       }
@@ -53,11 +53,11 @@ const PlayControls = () => {
       if (result.isLoaded) {
         if (!result.isPlaying) {
           sound.current.playAsync();
-          SetPlaying(true);
+          setPlaying(true);
         }
       }
     } catch (error) {
-      SetPlaying(false);
+      setPlaying(false);
     }
   };
 
@@ -67,11 +67,11 @@ const PlayControls = () => {
       if (result.isLoaded) {
         if (result.isPlaying) {
           sound.current.pauseAsync();
-          SetPlaying(false);
+          setPlaying(false);
         }
       }
     } catch (error) {
-      SetPlaying(true);
+      setPlaying(true);
     }
   };
 
@@ -80,7 +80,7 @@ const PlayControls = () => {
 
       const checkLoading = await sound.current.getStatusAsync();
       if (checkLoading.isLoaded) {
-        const result = (data / 100) * Duration;
+        const result = (data / 100) * duration;
         await sound.current.setPositionAsync(Math.round(result));
       }
     } catch (error) {
@@ -89,7 +89,7 @@ const PlayControls = () => {
   };
 
   const LoadAudio = async () => {
-    SetLoading(true);
+    setLoading(true);
     const checkLoading = await sound.current.getStatusAsync();
     if (!checkLoading.isLoaded) {
       try {
@@ -99,22 +99,22 @@ const PlayControls = () => {
           true
         );
         if (!result.isLoaded) {
-          SetLoading(false);
-          SetLoaded(false);
+          setLoading(false);
+          setLoaded(false);
           console.log('Error in Loading Audio');
         } else {
           sound.current.setOnPlaybackStatusUpdate(UpdateStatus);
-          SetLoading(false);
-          SetLoaded(true);
-          SetDuration(result.durationMillis);
+          setLoading(false);
+          setLoaded(true);
+          setDuration(result.durationMillis);
         }
       } catch (error) {
-        SetLoading(false);
-        SetLoaded(false);
+        setLoading(false);
+        setLoaded(false);
       }
     } else {
-      SetLoading(false);
-      SetLoaded(true);
+      setLoading(false);
+      setLoaded(true);
     }
   };
 
@@ -125,7 +125,7 @@ const PlayControls = () => {
           style={{ width: 365 }}
           minimumValue={0}
           maximumValue={100}
-          value={Value}
+          value={value}
           onValueChange={(value) => {console.log(value)}}
           onSlidingComplete={(data) => SeekUpdate(data)}
           minimumTrackTintColor={'dodgerblue'}
@@ -136,13 +136,13 @@ const PlayControls = () => {
           {/*  onPressPlay={playSound}*/}
           {/*  onPressStop={stopSound}*/}
           {/*/>*/}
-          {Loading ? (
+          {loading ? (
             <ActivityIndicator size={"small"} color={"red"}/>
           )
-          : !Loaded ?
+          : !loaded ?
               <Button title={"Load"} onPress={LoadAudio}/>
               :
-              <Button title={"Play"} onPress={Playing ? PauseAudio : PlayAudio}/>
+              <Button title={"Play"} onPress={playing ? PauseAudio : PlayAudio}/>
           }
 
           <RewindButton isForward={true}/>
