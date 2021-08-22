@@ -31,7 +31,7 @@ export function* doFetch({
   method,
   url,
 } //@ts-expect-error
-: RequestParams): WrapGenerator<FetchResponse> {
+: RequestParams): WrapGeneratorT<FetchResponse> {
 
   const fullPath = END_POINT + url;
   const headers = {...DEFAULT_HEADERS};
