@@ -1,6 +1,6 @@
-import {types as t} from './actions';
+import {LoadEpisodeSuccessAction, types as t} from './actions';
 import {EpisodeStateT, ItemEnum} from "./model";
-import {ActionT} from "../model";
+import {ActionT} from "./model";
 
 const initialState: EpisodeStateT = {
   podcastId: '',
@@ -17,8 +17,9 @@ const initialState: EpisodeStateT = {
 export default (state = initialState, action: ActionT): EpisodeStateT => {
   switch (action.type) {
     case t.LOAD_EPISODE_SUCCESS: {
+      const { episode } = action;
       return {
-        ...action.episode
+        ...episode
       }
     }
     case t.LOAD_EPISODE_FAILURE: {
