@@ -10,10 +10,12 @@
   "dependencies": {
     "@ptomasroos/react-native-multi-slider": "^2.2.2",
     "@react-native-community/slider": "^4.1.1",
+    "@types/lodash": "^4.14.172",
     "axios": "^0.21.1",
     "expo": "~42.0.1",
     "expo-av": "~9.2.3",
     "expo-status-bar": "~1.0.4",
+    "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
