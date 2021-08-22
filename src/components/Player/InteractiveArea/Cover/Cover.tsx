@@ -1,16 +1,16 @@
 import React from 'react';
 import {ImageBackground, Image, View} from 'react-native';
-import {ItemStyles as styles} from "./Item.styles";
+import {CoverStyles as styles} from "./CoverStyles";
 
 type PropsT = {
   backGroundImageUrl?: string;
 }
 
-const Item: React.FC<PropsT> = ({
+const Cover: React.FC<PropsT> = ({
   backGroundImageUrl
 }) => {
 
-  const image = {uri: 'https://avatars.yandex.net/get-music-content/103235/6856d850.a.6407298-11/m1000x1000'};
+  const image = {uri: backGroundImageUrl};
 
   return (
     <View style={styles.container}>
@@ -21,4 +21,4 @@ const Item: React.FC<PropsT> = ({
   );
 };
 
-export default Item;
+export default Cover;

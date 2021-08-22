@@ -1,6 +1,6 @@
 import {StyleSheet} from "react-native";
 
-export const ItemStyles = StyleSheet.create({
+export const CoverStyles = StyleSheet.create({
   container: {
     width: 365,
     height: 365,
