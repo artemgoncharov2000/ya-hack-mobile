@@ -1,5 +1,5 @@
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Button, ActivityIndicator} from "react-native";
 import {ControlsStyles as styles} from "./Controls.styles";
 import PlayButton from "../../PlayButton/PlayButton";
@@ -8,6 +8,9 @@ import RewindButton from "../../RewindButton/RewindButton";
 import {Audio, AVPlaybackStatus} from 'expo-av';
 import { Sound } from 'expo-av/build/Audio/Sound';
 import Slider from '@react-native-community/slider';
+import moment from "moment";
+import {useSelector} from "react-redux";
+import {getItemsByKey} from "../../../modules/episode/selectors";
 
 const uri =  "file:///Users/artemgoncharov/Library/Developer/CoreSimulator/Devices/586D35AB-0332-42CE-B75E-287E6B5AC19E/data/Containers/Data/Application/99DD4F57-C1AE-4196-B18C-EB65376CCD03/Library/Caches/ExponentExperienceData/%2540artemgoncharov2000%252FYaHackMobile/ExponentAsset-a8498bd8aa4b8070ad0a07977277cafc.mp3"
 type PropsT = {
@@ -15,6 +18,8 @@ type PropsT = {
 }
 
 const PlayControls: React.FC<PropsT> = ({trackUrl}) => {
+  const itemsByKey = useSelector(getItemsByKey);
+  console.log('itemByKey', itemsByKey);
   const [loaded, setLoaded] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [playing, setPlaying] = React.useState(false);
@@ -22,11 +27,15 @@ const PlayControls: React.FC<PropsT> = ({trackUrl}) => {
   const [value, setValue] = React.useState(0);
   const sound = React.useRef(new Audio.Sound());
 
-  const UpdateStatus = async (data) => {
+  const updateStatus = async (data) => {
     try {
       if (data.didJustFinish) {
-        ResetPlayer();
+        console.log('update status 1');
+        await resetPlayer();
       } else if (data.positionMillis) {
+        const duration = moment.duration(data.positionMillis);
+        const seconds = Math.trunc(duration.asSeconds());
+        console.log('positionsSec: ', seconds);
         if (data.durationMillis) {
           setValue((data.positionMillis / data.durationMillis) * 100);
         }
@@ -36,7 +45,7 @@ const PlayControls: React.FC<PropsT> = ({trackUrl}) => {
     }
   };
 
-  const ResetPlayer = async () => {
+  const resetPlayer = async () => {
     try {
       const checkLoading = await sound.current.getStatusAsync();
       if (checkLoading.isLoaded) {
@@ -50,13 +59,15 @@ const PlayControls: React.FC<PropsT> = ({trackUrl}) => {
     }
   };
 
-  const PlayAudio = async () => {
+
+  const playAudio = async () => {
     try {
       const result = await sound.current.getStatusAsync();
       if (result.isLoaded) {
         if (!result.isPlaying) {
           sound.current.playAsync();
           setPlaying(true);
+
         }
       }
     } catch (error) {
@@ -64,7 +75,7 @@ const PlayControls: React.FC<PropsT> = ({trackUrl}) => {
     }
   };
 
-  const PauseAudio = async () => {
+  const pauseAudio = async () => {
     try {
       const result = await sound.current.getStatusAsync();
       if (result.isLoaded) {
@@ -78,12 +89,11 @@ const PlayControls: React.FC<PropsT> = ({trackUrl}) => {
     }
   };
 
-  const SeekUpdate = async (data) => {
+  const seekUpdate = async (currentPos: number) => {
     try {
-
       const checkLoading = await sound.current.getStatusAsync();
       if (checkLoading.isLoaded) {
-        const result = (data / 100) * duration;
+        const result = (currentPos / 100) * duration;
         await sound.current.setPositionAsync(Math.round(result));
       }
     } catch (error) {
@@ -91,7 +101,7 @@ const PlayControls: React.FC<PropsT> = ({trackUrl}) => {
     }
   };
 
-  const LoadAudio = async () => {
+  const loadAudio = async () => {
     setLoading(true);
     const checkLoading = await sound.current.getStatusAsync();
     if (!checkLoading.isLoaded) {
@@ -106,7 +116,7 @@ const PlayControls: React.FC<PropsT> = ({trackUrl}) => {
           setLoaded(false);
           console.log('Error in Loading Audio');
         } else {
-          sound.current.setOnPlaybackStatusUpdate(UpdateStatus);
+          sound.current.setOnPlaybackStatusUpdate(updateStatus);
           setLoading(false);
           setLoaded(true);
           setDuration(result.durationMillis);
@@ -121,6 +131,20 @@ const PlayControls: React.FC<PropsT> = ({trackUrl}) => {
     }
   };
 
+  const handleMoveForward = async () => {
+    const newPos = value + 5;
+    await seekUpdate(newPos);
+  }
+
+  const handleMoveBackward = async () => {
+    const newPos = value - 5;
+    await seekUpdate(newPos);
+  }
+
+  useEffect(() => {
+    loadAudio();
+  }, []);
+
     return (
       <View style={styles.container}>
         {/*<Slider currentPos={Value} duration={Duration}/>*/}
@@ -130,25 +154,19 @@ const PlayControls: React.FC<PropsT> = ({trackUrl}) => {
           maximumValue={100}
           value={value}
           onValueChange={(value) => {console.log(value)}}
-          onSlidingComplete={(data) => SeekUpdate(data)}
+          onSlidingComplete={(currentPos) => seekUpdate(currentPos)}
           minimumTrackTintColor={'dodgerblue'}
         />
         <View style={styles.buttonsContainer}>
-          <RewindButton isForward={false}/>
-          {/*<PlayButton*/}
-          {/*  onPressPlay={playSound}*/}
-          {/*  onPressStop={stopSound}*/}
-          {/*/>*/}
+          <RewindButton isForward={false} onPress={handleMoveBackward}/>
           {loading ? (
             <ActivityIndicator size={"small"} color={"red"}/>
           )
-          : !loaded ?
-              <Button title={"Load"} onPress={LoadAudio}/>
-              :
-              <Button title={"Play"} onPress={playing ? PauseAudio : PlayAudio}/>
+          : loaded && (
+              <PlayButton playing={playing} onPress={playing ? pauseAudio : playAudio}/>
+            )
           }
-
-          <RewindButton isForward={true}/>
+          <RewindButton isForward={true} onPress={handleMoveForward}/>
         </View>
       </View>
     );
