@@ -17,4 +17,8 @@ export const PollStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  buttonContainer: {
+    paddingVertical: 20,
+    paddingHorizontal: 120,
+  },
 });
