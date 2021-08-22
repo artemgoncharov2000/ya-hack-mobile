@@ -12,7 +12,7 @@ import {loadEpisode} from "../../modules/episode/actions";
 import {selectEpisode} from "../../modules/episode/selectors";
 
 const Player: React.FC = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const episode = useSelector(selectEpisode);
 
   useEffect(() => {
