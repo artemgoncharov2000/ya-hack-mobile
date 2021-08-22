@@ -5,33 +5,24 @@ import PlayIcon from '../../icons/play-button-icon.svg';
 import PauseIcon from '../../icons/pause-button-icon.svg';
 
 type PropsT = {
-  onPressPlay: () => {};
-  onPressStop: () => {};
+  playing: boolean;
+  onPress: () => {}
 };
 
 const PlayButton: React.FC<PropsT> = ({
-  onPressPlay,
-  onPressStop,
+  playing,
+  onPress,
 }) => {
 
-  const [isPlaying, setIsPlaying] = useState(false);
-
   const handlePress = () => {
-    // if (isPlaying) {
-    //   setIsPlaying(!isPlaying)
-    //   onPressStop();
-    // } else {
-    //   setIsPlaying(!isPlaying)
-    //   onPressPlay();
-    // }
-    onPressPlay();
+    onPress();
   }
 
   return (
     <View>
       <TouchableOpacity  onPress={handlePress}>
         {
-          isPlaying
+          playing
             ?
             <PauseIcon />
             :
