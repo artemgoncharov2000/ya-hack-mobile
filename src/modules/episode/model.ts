@@ -1,5 +1,5 @@
 export enum ItemEnum {
-  POLL = 'pol',
+  POLL = 'poll',
   IMAGE_BUTTON = 'imagebutton',
   TEXT = 'text',
   FORM = 'form',
@@ -11,8 +11,8 @@ export type EpisodeItemT = {
   timeStart: number,
   timeEnd: number,
   question?: string,
-  options?: string,
-  multipleAnswer?: boolean,
+  options?: Array<string>,
+  multipleOptions?: boolean,
   text?: string,
   buttonUrl?: string,
   buttonText?: string,
@@ -28,5 +28,6 @@ export type EpisodeStateT = {
   url: string,
   description: string,
   published: boolean,
+  defaultImageUrl: string,
   items: Array<EpisodeItemT> | null,
 };
