@@ -2,23 +2,42 @@ import React from 'react';
 import {ImageBackground, Image, View} from 'react-native';
 import {CoverStyles as styles} from "./CoverStyles";
 
+export const enum ImageSize {
+  LARGE = 'LARGE',
+  MEDIUM = 'MEDIUM',
+  SMALL = 'SMALL',
+}
+
 type PropsT = {
-  backGroundImageUrl?: string;
+  backgroundImageUrl?: string;
+  imageSize: ImageSize;
 }
 
 const Cover: React.FC<PropsT> = ({
-  backGroundImageUrl
+  backgroundImageUrl,
+  imageSize,
 }) => {
 
-  const image = {uri: backGroundImageUrl};
+  const image = {uri: backgroundImageUrl};
+  let size;
+
+  switch (imageSize) {
+    case ImageSize.LARGE:
+      size = styles.imageContainerLarge;
+      break;
+    case ImageSize.MEDIUM:
+      size = styles.imageContainerMedium;
+      break;
+    default:
+      size = styles.imageContainerLarge;
+      break;
+  }
 
   return (
-    <View style={styles.container}>
-      {
-        <Image style={styles.imageContainer} source={image}/>
-      }
-    </View>
+    <Image
+      style={size} source={image}
+    />
   );
-};
+}
 
 export default Cover;
