@@ -7,16 +7,14 @@ import InputField from "../../../InputField/InputField";
 
 type PropsT = {
   question: string,
-  options: Array<string>,
+  options?: Array<string>,
   hasMultipleAnswers?: boolean;
-  hasTextAnswer?: boolean,
 }
 
 const Poll: React.FC<PropsT> = ({
   question,
   options,
   hasMultipleAnswers,
-  hasTextAnswer,
 }) => {
 
   return (
@@ -24,12 +22,8 @@ const Poll: React.FC<PropsT> = ({
       <Text style={styles.title}>ГОЛОСОВАНИЕ</Text>
       <Text style={styles.questionTitle}>{question}</Text>
       {
-        hasTextAnswer
+        options
           ?
-          <InputField
-            placeholder={'Ваш ответ'}
-          />
-          :
           options.map((option, index) => {
             return (
               <PollItem
@@ -39,7 +33,10 @@ const Poll: React.FC<PropsT> = ({
               />
             )
           })
-
+          :
+          <InputField
+            placeholder={'Ваш ответ'}
+          />
       }
       <View style={styles.buttonContainer}>
         <Button title={"Отправить"} onPress={() => {}}/>
