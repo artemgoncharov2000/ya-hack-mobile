@@ -12,3 +12,16 @@ export function* getEpisode(guid: string): ReturnType<typeof doFetch> {
     throw error;
   }
 }
+
+export function* getPodcast(podcastId: string): ReturnType<typeof doFetch> {
+  try {
+    const requestParams: RequestParams = {
+      method: RequestMethodEnum.GET,
+      url: `/podcasts/${podcastId}`,
+    }
+
+    return yield doFetch(requestParams);
+  } catch (error) {
+    return error;
+  }
+}
