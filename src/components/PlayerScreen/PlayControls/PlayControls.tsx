@@ -1,5 +1,5 @@
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {View, Text, Button, ActivityIndicator} from "react-native";
 import {ControlsStyles as styles} from "./Controls.styles";
 import PlayButton from "../../PlayButton/PlayButton";
@@ -11,12 +11,11 @@ import { Sound } from 'expo-av/build/Audio/Sound';
 import Slider from '@react-native-community/slider';
 import moment from "moment";
 import {useDispatch, useSelector} from "react-redux";
-import {getItemsByKey} from "../../../modules/episode/selectors";
+import {getItemsByKey, getTimesEnd} from "../../../modules/episode/selectors";
 import {setCurrentItem} from "../../../modules/current-item/actions";
 import PlayerSlider from "../../Slider/Slider";
 import {selectCurrentItem} from "../../../modules/current-item/selectors";
 
-const uri =  "file:///Users/artemgoncharov/Library/Developer/CoreSimulator/Devices/586D35AB-0332-42CE-B75E-287E6B5AC19E/data/Containers/Data/Application/99DD4F57-C1AE-4196-B18C-EB65376CCD03/Library/Caches/ExponentExperienceData/%2540artemgoncharov2000%252FYaHackMobile/ExponentAsset-a8498bd8aa4b8070ad0a07977277cafc.mp3"
 type PropsT = {
   trackUrl: string;
 }
@@ -25,6 +24,7 @@ const PlayControls: React.FC<PropsT> = ({trackUrl}) => {
   const currentItem = useSelector(selectCurrentItem);
   const dispatch = useDispatch();
   const itemsByKey = useSelector(getItemsByKey);
+  const timesEnd = useSelector(getTimesEnd);
   const [loaded, setLoaded] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [playing, setPlaying] = React.useState(false);
@@ -34,25 +34,18 @@ const PlayControls: React.FC<PropsT> = ({trackUrl}) => {
   const sound = React.useRef(new Audio.Sound());
 
 
-
-  const updateItems = (seconds: number) => {
-    const item = itemsByKey[seconds];
-
-    if (isNil(item)) {
-      return;
-    }
-
-    dispatch(setCurrentItem(item));
-  };
-
   const updateCurrentItem = (seconds: number) => {
-    if (isNil(currentItem)) {
-      return;
-    }
 
-    if (currentItem.timeEnd === seconds) {
+    if (timesEnd[seconds]) {
       dispatch(setCurrentItem(null));
     }
+
+    const item = itemsByKey[seconds];
+
+    if (!isNil(item)) {
+      dispatch(setCurrentItem(item));
+    }
+
   }
 
   const updateStatus = async (data) => {
@@ -62,10 +55,8 @@ const PlayControls: React.FC<PropsT> = ({trackUrl}) => {
       } else if (data.positionMillis) {
         const duration = moment.duration(data.positionMillis);
         const seconds = Math.trunc(duration.asSeconds());
-        console.log('currentSeconds:', seconds);
-        setCurrentMillis(data.positionMillis);
-        updateItems(seconds);
         updateCurrentItem(seconds);
+        setCurrentMillis(data.positionMillis);
         if (data.durationMillis) {
           setValue((data.positionMillis / data.durationMillis) * 100);
         }
@@ -149,7 +140,7 @@ const PlayControls: React.FC<PropsT> = ({trackUrl}) => {
           setLoaded(false);
           console.log('Error in Loading Audio');
         } else {
-          sound.current.setOnPlaybackStatusUpdate(updateStatus);
+          await sound.current.setOnPlaybackStatusUpdate(updateStatus);
           setLoading(false);
           setLoaded(true);
           setDuration(result.durationMillis);
@@ -175,9 +166,9 @@ const PlayControls: React.FC<PropsT> = ({trackUrl}) => {
   }
 
   useEffect(() => {
-    loadAudio();
-    console.log('loaded');
-  }, [loaded, setLoaded]);
+    loadAudio()
+  }, []);
+
 
     return (
       <View style={styles.container}>
