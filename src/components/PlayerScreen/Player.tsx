@@ -9,21 +9,26 @@ import PlayControls from "./PlayControls/PlayControls";
 import Footer from "./Footer/Footer";
 import {useDispatch, useSelector} from "react-redux";
 import {loadEpisode} from "../../modules/episode/actions";
-import {selectEpisode} from "../../modules/episode/selectors";
+import {getCurrentGuid, selectEpisode} from "../../modules/episode/selectors";
 
-const Player: React.FC = () => {
+type PropsT = {
+  navigation: any;
+}
+const Player: React.FC<PropsT> = ({
+  navigation,
+}) => {
   const dispatch = useDispatch();
+  const currentGuid = useSelector(getCurrentGuid);
   const episode = useSelector(selectEpisode);
 
   useEffect(() => {
-    const guid = '4ceec985-08bb-c5b3-ca67-1b78d33a91df';
-    dispatch(loadEpisode(guid));
+    dispatch(loadEpisode(currentGuid));
   }, [])
 
   return (
     <SafeAreaView style={PlayerStyles.Player}>
-      <Header title={episode.title}/>
-      <InteractiveArea/>
+      <Header title={episode.title} navigation={navigation}/>
+      <InteractiveArea defaultImageUrl={episode.defaultImageUrl}/>
       <SongInfo
         title={episode.description}
         subtitle={episode.title}
