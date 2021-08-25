@@ -11,4 +11,8 @@ export const TextAreaStyles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  buttonContainer: {
+    paddingVertical: 20,
+    paddingHorizontal: 120,
+  },
 });
