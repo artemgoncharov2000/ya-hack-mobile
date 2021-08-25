@@ -6,5 +6,6 @@ export const InteractiveAreaStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingTop: 35,
-  }
+    paddingHorizontal: 30,
+  },
 })
