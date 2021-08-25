@@ -2,15 +2,13 @@ import {StyleSheet} from "react-native";
 
 export const PodcastInfoStyles = StyleSheet.create({
   container: {
-    flex: 3,
+    flex: 4,
     justifyContent: "center",
     alignItems: "center",
-    borderBottomWidth: 0.5,
-    borderBottomColor: 'grey',
   },
   titleContainer: {
     paddingHorizontal: 10,
-    paddingVertical: 3,
+    paddingTop: 20,
   },
   title: {
     fontWeight: "bold",
@@ -19,10 +17,13 @@ export const PodcastInfoStyles = StyleSheet.create({
   },
   descriptionContainer: {
     paddingHorizontal: 10,
-    paddingVertical: 3,
+    paddingTop: 5,
   },
   description: {
     fontSize: 14,
     color: 'grey',
+  },
+  buttonContainer: {
+    paddingTop: 30,
   },
 });
