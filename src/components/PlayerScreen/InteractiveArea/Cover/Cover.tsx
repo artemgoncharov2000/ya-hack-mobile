@@ -18,6 +18,8 @@ const Cover: React.FC<PropsT> = ({
   imageSize,
 }) => {
 
+  console.log('rendered');
+  console.log('backgroundImageUrl: ', backgroundImageUrl);
   const image = {uri: backgroundImageUrl};
   let size;
 
