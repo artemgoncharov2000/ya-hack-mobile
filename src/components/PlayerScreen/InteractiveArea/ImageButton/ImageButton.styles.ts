@@ -7,13 +7,17 @@ export const ImageButtonStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  imageContainerLarge: {
+  imageContainer: {
     width: 250,
     height: 250,
     borderStyle: 'solid',
     borderColor: 'white',
     borderRadius: 10,
     borderWidth: 15,
+  },
+  image: {
+    width: 220,
+    height: 220,
   },
   buttonContainer: {
     marginTop: 15,

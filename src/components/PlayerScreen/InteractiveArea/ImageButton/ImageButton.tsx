@@ -33,7 +33,9 @@ const ImageButton: React.FC<PropsT> = ({
     <View style={styles.container}>
       {
         imageUrl && (
-          <Image style={styles.imageContainerLarge} source={{uri: 'https://pbs.twimg.com/profile_images/984521325820522496/MHro8JD5.jpg'}}/>
+          <View style={styles.imageContainer}>
+            <Image style={styles.image} source={{uri: imageUrl}}/>
+          </View>
         )
       }
       {
