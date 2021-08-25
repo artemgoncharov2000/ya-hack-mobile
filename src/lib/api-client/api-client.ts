@@ -25,3 +25,19 @@ export function* getPodcast(podcastId: string): ReturnType<typeof doFetch> {
     return error;
   }
 }
+
+export function* getPollResult(id: string, answers: Array<number>): ReturnType<typeof doFetch> {
+  try {
+    const requestParams: RequestParams = {
+      method: RequestMethodEnum.POST,
+      url: `/stats/polls/${id}`,
+      data: {
+        answers,
+      },
+    }
+
+    return yield doFetch(requestParams);
+  } catch (error) {
+    return error;
+  }
+}
