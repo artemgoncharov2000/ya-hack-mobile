@@ -10,10 +10,6 @@ export enum RequestMethodEnum {
   DELETE = 'DELETE',
 }
 
-const DEFAULT_HEADERS = {
-  'Authorization': 'Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c2VyIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XSwiaWF0IjoxNjI5MjMxMDA1LCJleHAiOjE2MzAzNTcyMDB9.z3OV1WESZnv7pl_yZFy-EM6O7_qfgww40ruqyIUocAldQrB5rNyDnJP0kVWHjhah'
-}
-
 const END_POINT = 'http://localhost:8080'
 
 export interface FetchResponse<T> {
@@ -35,24 +31,17 @@ export function* doFetch({
 } //@ts-expect-error
 : RequestParams): WrapGeneratorT<FetchResponse> {
   const fullPath = END_POINT + url;
-  const headers = {...DEFAULT_HEADERS};
-
-  let body;
-  if (data) {
-    body = JSON.stringify(data);
-  }
 
   try {
-
+    console.log('data: ', JSON.stringify(data))
     let response = yield axios({
       url: fullPath,
       method: method,
-      body: body,
+      data: data,
       headers: {
         authorization: 'Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c2VyIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XSwiaWF0IjoxNjI5MjMxMDA1LCJleHAiOjE2MzAzNTcyMDB9.z3OV1WESZnv7pl_yZFy-EM6O7_qfgww40ruqyIUocAldQrB5rNyDnJP0kVWHjhah',
       },
     })
-
     return {data: response['data'], status: response.status};
   } catch (err) {
     throw err;
