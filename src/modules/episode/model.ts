@@ -17,6 +17,9 @@ export type EpisodeItemT = {
   buttonUrl?: string,
   buttonText?: string,
   imageUrl?: string,
+  canInteract?: boolean;
+  stats?: Array<number>;
+  hasInputForm?: boolean;
 };
 
 export type EpisodeStateT = {

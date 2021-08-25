@@ -7,14 +7,17 @@ export enum ItemEnum {
 
 export type CurrentItemStateT = {
   id: string,
-  type: ItemEnum,
-  timeStart: number,
-  timeEnd: number,
-  question?: string,
-  options?: Array<string>,
-  multipleOptions?: boolean,
-  text?: string,
-  buttonUrl?: string,
-  buttonText?: string,
-  imageUrl?: string,
+  type: ItemEnum;
+  timeStart: number;
+  timeEnd: number;
+  question?: string;
+  options?: Array<string>;
+  multipleOptions?: boolean;
+  text?: string;
+  buttonUrl?: string;
+  buttonText?: string;
+  imageUrl?: string;
+  canInteract?: boolean;
+  stats?: Array<number>;
+  hasInputForm?: boolean;
 }

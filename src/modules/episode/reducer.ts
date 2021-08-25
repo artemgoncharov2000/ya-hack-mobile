@@ -1,6 +1,6 @@
-import {LoadEpisodeSuccessAction, types as t} from './actions';
+import {types as t} from './actions';
 import {EpisodeStateT, ItemEnum} from "./model";
-import {ActionT} from "./model";
+import {ActionT} from "./actions";
 
 const initialState: EpisodeStateT = {
   podcastId: '',
@@ -9,6 +9,7 @@ const initialState: EpisodeStateT = {
   title: '',
   duration: 0,
   url: '',
+  defaultImageUrl: '',
   description: '',
   published: false,
   items: null,
@@ -17,9 +18,17 @@ const initialState: EpisodeStateT = {
 export default (state = initialState, action: ActionT): EpisodeStateT => {
   switch (action.type) {
     case t.LOAD_EPISODE_SUCCESS: {
+      // @ts-ignore
       const { episode } = action;
       return {
         ...episode
+      }
+    }
+    case t.SET_EPISODE_GUID: {
+      const { guid } = action;
+      return {
+        ...state,
+        guid: guid,
       }
     }
     case t.LOAD_EPISODE_FAILURE: {
@@ -27,10 +36,8 @@ export default (state = initialState, action: ActionT): EpisodeStateT => {
       console.log('Reason: ', action.error);
       return state;
     }
-
     default: {
       return state;
     }
-
   }
 }
