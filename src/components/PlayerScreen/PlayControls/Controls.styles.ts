@@ -3,8 +3,6 @@ import {StyleSheet} from "react-native";
 export const ControlsStyles = StyleSheet.create({
   container: {
     flex: 3,
-    // justifyContent: "center",
-    // alignItems: "center",
     alignItems: 'center',
     paddingVertical: 20,
   },
